@@ -2,6 +2,7 @@ package jmaster.io.statisticservice.controller;
 
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ public class StatisticController {
     // Add new
     @PostMapping("/statistic")
     public StatisticDTO add(@RequestBody StatisticDTO statisticDTO, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
-	logger.debug("Add statistic");
+	logger.info("Add statistic");
 	
 //	try {
 //	    Thread.sleep(10000);
@@ -42,7 +43,7 @@ public class StatisticController {
     // get all
     @GetMapping("/statistics")
     public List<StatisticDTO> getAll() {
-	logger.debug("Get all statistic");
+	logger.info("Get all statistic");
 
 	return statisticService.getAll();
     }

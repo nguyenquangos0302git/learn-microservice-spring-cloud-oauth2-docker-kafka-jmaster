@@ -3,6 +3,7 @@ package accountservice.accountservice.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,7 @@ public interface AccountService {
 
 @Transactional
 @Service
+@Slf4j
 class AccountServiceImpl implements AccountService {
     @Autowired
     AccountRepository accountRepository;
@@ -75,6 +77,7 @@ class AccountServiceImpl implements AccountService {
 
     @Override
     public List<AccountDTO> getAll() {
+        log.info("[getAll] -> Execute");
 	List<AccountDTO> accountDTOs = new ArrayList<>();
 
 	accountRepository.findAll().forEach((account) -> {

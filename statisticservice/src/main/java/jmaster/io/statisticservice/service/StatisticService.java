@@ -3,6 +3,7 @@ package jmaster.io.statisticservice.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ public interface StatisticService {
 
 @Transactional
 @Service
+@Slf4j
 class StatisticServiceImpl implements StatisticService {
     @Autowired
     StatisticRepository statisticRepository;
@@ -36,6 +38,7 @@ class StatisticServiceImpl implements StatisticService {
 
     @Override
     public List<StatisticDTO> getAll() {
+        log.info("Get all statistic");
 	List<StatisticDTO> statisticDTOs = new ArrayList<>();
 
 	statisticRepository.findAll().forEach((statistic) -> {

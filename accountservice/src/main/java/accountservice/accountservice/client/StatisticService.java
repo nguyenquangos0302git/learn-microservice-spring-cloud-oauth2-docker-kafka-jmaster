@@ -2,13 +2,14 @@ package accountservice.accountservice.client;
 
 import accountservice.accountservice.model.StatisticDTO;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name = "statistic-service", url = "http://localhost:9082")
+@FeignClient(name = "statistic-service", fallback = StatisticServiceImpl.class)
 public interface StatisticService {
 
     @PostMapping("/statistic")
-    StatisticDTO add(@RequestBody StatisticDTO statisticDTO);
+    void add(@RequestBody StatisticDTO statisticDTO);
 
 }
