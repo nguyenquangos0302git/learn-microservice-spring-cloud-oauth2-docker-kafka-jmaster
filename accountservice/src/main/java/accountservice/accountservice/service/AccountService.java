@@ -6,6 +6,7 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,7 +41,7 @@ class AccountServiceImpl implements AccountService {
     @Override
     public void add(AccountDTO accountDTO) {
 	Account account = modelMapper.map(accountDTO, Account.class);
-	//account.setPassword(new BCryptPasswordEncoder().encode(accountDTO.getPassword()));
+	account.setPassword(new BCryptPasswordEncoder().encode(accountDTO.getPassword()));
 
 	accountRepository.save(account);
 
@@ -62,7 +63,7 @@ class AccountServiceImpl implements AccountService {
     public void updatePassword(AccountDTO accountDTO) {
 	Account account = accountRepository.getById(accountDTO.getId());
 	if (account != null) {
-	    //account.setPassword(new BCryptPasswordEncoder().encode(accountDTO.getPassword()));
+	    account.setPassword(new BCryptPasswordEncoder().encode(accountDTO.getPassword()));
 	    accountRepository.save(account);
 	}
     }

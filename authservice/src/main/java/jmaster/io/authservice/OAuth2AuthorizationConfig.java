@@ -15,6 +15,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
@@ -39,8 +40,7 @@ public class OAuth2AuthorizationConfig extends AuthorizationServerConfigurerAdap
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 //	clients.inMemory().withClient("jmaster").secret(passwordEncoder.encode("123"))
-//		.authorizedGrantTypes("password", "implicit", "client_credentials", "authorization_code",
-//			"refresh_token")
+//		.authorizedGrantTypes("password", "implicit", "client_credentials", "authorization_code", "refresh_token")
 //		.redirectUris("https://oauthdebugger.com/debug").scopes("read", "write")
 //		.accessTokenValiditySeconds(3600) // 1 hour
 //		.refreshTokenValiditySeconds(2592000)
@@ -49,20 +49,30 @@ public class OAuth2AuthorizationConfig extends AuthorizationServerConfigurerAdap
 //		.withClient("accountservice").secret(passwordEncoder.encode("123"))
 //		.authorizedGrantTypes("client_credentials")
 //		.scopes("notification", "log")
-//		.accessTokenValiditySeconds(300) // 5 minutes
-//	clients.jdbc(dataSource);
+//		.accessTokenValiditySeconds(300); // 5 minutes
+	clients.jdbc(dataSource);
     }
 
 //    @Bean
 //    public TokenStore tokenStore() {
-//	return new InMemoryTokenStore();
+//	    return new InMemoryTokenStore();
 //    }
 
 //    @Override
 //    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-//	endpoints.authenticationManager(authenticationManager).tokenStore(tokenStore())
-//		.accessTokenConverter(accessTokenConverter()).userDetailsService(userDetailsService);
+//        endpoints.authenticationManager(authenticationManager).tokenStore(tokenStore());
 //    }
+
+    @Override
+    public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
+        security.passwordEncoder(passwordEncoder);
+    }
+
+        @Override
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+	endpoints.authenticationManager(authenticationManager).tokenStore(tokenStore())
+		.accessTokenConverter(accessTokenConverter()).userDetailsService(userDetailsService);
+    }
 //
 //    @Override
 //    public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
@@ -70,23 +80,23 @@ public class OAuth2AuthorizationConfig extends AuthorizationServerConfigurerAdap
 //		.allowFormAuthenticationForClients();
 //    }
 //
-//    // JWT
-//    @Bean
-//    public TokenStore tokenStore() {
-//	return new JwtTokenStore(accessTokenConverter());
-//    }
-//
-//    @Bean
-//    public JwtAccessTokenConverter accessTokenConverter() {
-//	JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-////	converter.setSigningKey("123");// symmetric key
-//
-//	// asymmetric key is more secure
-//	KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource("jmasterio.jks"),
-//		"123456".toCharArray());
-//	converter.setKeyPair(keyStoreKeyFactory.getKeyPair("jmasterio"));
-//
-//	return converter;
-//    }
+    // JWT
+    @Bean
+    public TokenStore tokenStore() {
+	return new JwtTokenStore(accessTokenConverter());
+    }
+
+    @Bean
+    public JwtAccessTokenConverter accessTokenConverter() {
+	JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+//	converter.setSigningKey("123");// symmetric key
+
+//	 asymmetric key is more secure
+	KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource("jksmaster.jks"),
+		"123456".toCharArray());
+	converter.setKeyPair(keyStoreKeyFactory.getKeyPair("jksmaster"));
+
+	return converter;
+    }
 
 }

@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,6 +26,7 @@ public class StatisticController {
     private StatisticService statisticService;
 
     // Add new
+    @PreAuthorize("#oauth2.hasScope('log')")
     @PostMapping("/statistic")
     public StatisticDTO add(@RequestBody StatisticDTO statisticDTO, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
 	logger.info("Add statistic");
@@ -41,6 +43,7 @@ public class StatisticController {
     }
 
     // get all
+    @PreAuthorize("#oauth2.hasScope('read') && hasRole('ADMIN')")
     @GetMapping("/statistics")
     public List<StatisticDTO> getAll() {
 	logger.info("Get all statistic");
